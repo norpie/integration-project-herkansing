@@ -6,7 +6,7 @@ services:
       - 8000:80
     volumes:
       - fossbilling:/var/www/html
-  mysql:
+  fossbilling-db:
     image: mysql:8.0
     restart: always
     environment:
@@ -15,8 +15,8 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_RANDOM_ROOT_PASSWORD: "1"
     volumes:
-      - mysql:/var/lib/mysql
+      - fossbilling-data:/var/lib/mysql
 
 volumes:
   fossbilling:
-  mysql:
+  fossbilling-data:
