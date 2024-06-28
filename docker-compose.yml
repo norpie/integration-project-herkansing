@@ -1,0 +1,4 @@
+include:
+  # - rabbitmq/docker-compose.yml
+  # - fossbilling/docker-compose.yml
+  # - wordpress/docker-compose.yml
