@@ -1,0 +1,22 @@
+services:
+  fossbilling:
+    image: fossbilling/fossbilling
+    restart: always
+    ports:
+      - 8000:80
+    volumes:
+      - fossbilling:/var/www/html
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: fossbilling
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - mysql:/var/lib/mysql
+
+volumes:
+  fossbilling:
+  mysql:
