@@ -1,0 +1,10 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13.3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_USER: user
+      RABBITMQ_PASSWORD: password
+    ports:
+      - "15672:15672"
+      - "5672:5672"
