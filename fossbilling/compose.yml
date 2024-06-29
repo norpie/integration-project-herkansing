@@ -6,7 +6,7 @@ services:
     ports:
       - 8000:80
     volumes:
-      - fossbilling:/var/www/html
+      - fossbilling-data:/var/www/html
   fossbilling-db:
     container_name: fossbilling-db
     image: mysql:8.0
@@ -17,8 +17,10 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_RANDOM_ROOT_PASSWORD: "1"
     volumes:
-      - fossbilling-data:/var/lib/mysql
+      - fossbillingdb-data:/var/lib/mysql
 
 volumes:
-  fossbilling:
   fossbilling-data:
+    name: fossbilling-data
+  fossbillingdb-data:
+    name: fossbillingdb-data
