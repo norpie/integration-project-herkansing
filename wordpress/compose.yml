@@ -14,7 +14,7 @@ services:
     container_name: wordpress-db
     image: mysql:8.0
     volumes:
-      - wordpress-data:/var/lib/mysql
+      - wordpressdb-data:/var/lib/mysql
     restart: always
     environment:
       - MYSQL_DATABASE=wordpress
@@ -26,4 +26,5 @@ services:
       - 33060
 
 volumes:
-  wordpress-data:
+  wordpressdb-data:
+    name: wordpressdb-data
