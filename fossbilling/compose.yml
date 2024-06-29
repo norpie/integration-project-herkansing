@@ -7,6 +7,8 @@ services:
       - 8000:80
     volumes:
       - fossbilling-data:/var/www/html
+    networks:
+      - default-network
   fossbilling-db:
     container_name: fossbilling-db
     image: mysql:8.0
@@ -18,6 +20,8 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: "1"
     volumes:
       - fossbillingdb-data:/var/lib/mysql
+    networks:
+      - default-network
 
 volumes:
   fossbilling-data:

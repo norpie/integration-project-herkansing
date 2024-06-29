@@ -2,3 +2,7 @@ include:
   - rabbitmq/compose.yml
   - fossbilling/compose.yml
   - wordpress/compose.yml
+
+networks:
+  default-network:
+    name: default-network

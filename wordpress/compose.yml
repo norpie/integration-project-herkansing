@@ -10,6 +10,8 @@ services:
       - WORDPRESS_DB_USER=wordpress
       - WORDPRESS_DB_PASSWORD=wordpress
       - WORDPRESS_DB_NAME=wordpress
+    networks:
+      - default-network
   wordpress-db:
     container_name: wordpress-db
     image: mysql:8.0
@@ -24,6 +26,8 @@ services:
     expose:
       - 3306
       - 33060
+    networks:
+      - default-network
 
 volumes:
   wordpressdb-data:
