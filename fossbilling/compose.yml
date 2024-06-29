@@ -1,5 +1,6 @@
 services:
   fossbilling:
+    container_name: fossbilling
     image: fossbilling/fossbilling
     restart: always
     ports:
@@ -7,6 +8,7 @@ services:
     volumes:
       - fossbilling:/var/www/html
   fossbilling-db:
+    container_name: fossbilling-db
     image: mysql:8.0
     restart: always
     environment:

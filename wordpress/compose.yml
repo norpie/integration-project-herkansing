@@ -1,5 +1,6 @@
 services:
   wordpress:
+    container_name: wordpress
     image: wordpress:latest
     ports:
       - 8080:80
@@ -10,6 +11,7 @@ services:
       - WORDPRESS_DB_PASSWORD=wordpress
       - WORDPRESS_DB_NAME=wordpress
   wordpress-db:
+    container_name: wordpress-db
     image: mysql:8.0
     volumes:
       - wordpress-data:/var/lib/mysql
