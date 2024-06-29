@@ -4,13 +4,13 @@
 
 ```tree
 .
-├── docker-compose.yml
+├── compose.yml
 ├── fossbilling
-│   └── docker-compose.yml
+│   └── compose.yml
 ├── rabbitmq
-│   └── docker-compose.yml
+│   └── compose.yml
 └── wordpress
-    └── docker-compose.yml
+    └── compose.yml
 ```
 
 ### Fossbilling
