@@ -1,0 +1,7 @@
+{
+    "name": "user/rabbitmq-communication",
+    "type": "wordpress-plugin",
+    "require": {
+        "php-amqplib/php-amqplib": "^3.7"
+    }
+}
