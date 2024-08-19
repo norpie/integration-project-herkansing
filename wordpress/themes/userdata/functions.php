@@ -29,9 +29,10 @@ class CustomerSyncPlugin {
         }
     }
 
-    public function send_message($target, $client) {
+    public function send_message($target, $action, $client) {
         $json = json_encode([
             'target' => $target,
+            'action' => $action,
             'client' => $client
         ]);
         error_log('Sending message to RabbitMQ: ' . $json);
@@ -123,7 +124,7 @@ function handle_form_submit_new_client() {
     // Insert a new post of type 'fossbilling_client'
     $client_id = new_client($client);
     global $customer_sync_plugin;
-    $customer_sync_plugin->send_message('fossbilling', $client);
+    $customer_sync_plugin->send_message('fossbilling', 'create', $client);
 
     if ($client_id) {
         echo '<p>Client added successfully!</p>';
@@ -171,12 +172,47 @@ function new_client($client) {
     return $client_id;
 }
 
-function remove_client($client_id) {
-    wp_delete_post($client_id, true);
+function remove_client($email) {
+    $args = array(
+        'post_type' => 'client',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'client_email',
+                'value' => $email,
+                'compare' => '='
+            )
+        )
+    );
+
+    $clients = get_posts($args);
+    foreach ($clients as $client) {
+        wp_delete_post($client->ID, true);
+    }
 }
 
 function edit_client($client) {
-    $client_id = $client['id'];
+    $client_email = $client['email'];
+    $args = array(
+        'post_type' => 'client',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'client_email',
+                'value' => $client_email,
+                'compare' => '='
+            )
+        )
+    );
+
+    $clients = get_posts($args);
+    if (count($clients) == 0) {
+        return null;
+    }
+    $old_client = $clients[0];
+
     $client_first_name = $client['first_name'];
     $client_last_name = $client['last_name'];
     $client_company = $client['company'];
@@ -187,12 +223,11 @@ function edit_client($client) {
     $client_postal_code = $client['postal_code'];
     $client_phone = $client['phone'];
     $client_currency = $client['currency'];
-    $client_email = $client['email'];
     $client_password = $client['password'];
 
     // Update the post of type 'fossbilling_client'
     $client_id = wp_update_post(array(
-        'ID' => $client_id,
+        'ID' => $old_client->ID,
         'post_title' => $client_email,
         'post_type' => 'client',
         'post_status' => 'publish',
