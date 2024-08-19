@@ -14,9 +14,6 @@ class CustomerSyncPlugin {
 
     public function __construct() {
         $this->setup_rabbitmq_connection();
-        add_action('wp_insert_post', array($this, 'on_customer_created'), 10, 3);
-        add_action('post_updated', array($this, 'on_customer_updated'), 10, 3);
-        add_action('before_delete_post', array($this, 'on_customer_deleted'));
     }
 
     private function setup_rabbitmq_connection() {
@@ -24,28 +21,16 @@ class CustomerSyncPlugin {
             $this->connection = new AMQPStreamConnection('rabbitmq', 5672, 'user', 'password', '/');
             $this->channel = $this->connection->channel();
             $this->channel->queue_declare('customer_sync', false, true, false, false);
+            $this->channel->basic_consume('customer_sync', '', false, true, false, false, function($message) {
+                process_message($message);
+            });
+            error_log('Connected to RabbitMQ, waiting for messages');
         } catch (\Exception $e) {
             // Log the error
             error_log('Failed to connect to RabbitMQ: ' . $e->getMessage());
             // Optionally, you could set a flag to indicate that RabbitMQ is unavailable
             $this->rabbitmq_available = false;
         }
-    }
-
-    public function on_customer_created($post_id, $post, $update) {
-        if ($post->post_type !== 'customer' || $update) return;
-        $this->send_message('created', $post_id);
-    }
-
-    public function on_customer_updated($post_id, $post_after, $post_before) {
-        if ($post_after->post_type !== 'customer') return;
-        $this->send_message('updated', $post_id);
-    }
-
-    public function on_customer_deleted($post_id) {
-        $post = get_post($post_id);
-        if ($post->post_type !== 'customer') return;
-        $this->send_message('deleted', $post_id);
     }
 
     private function send_message($action, $post_id) {
@@ -63,4 +48,15 @@ class CustomerSyncPlugin {
     }
 }
 
-new CustomerSyncPlugin();
+
+// Handle rabbitmq consumed message, check if `target` is wordpress and process the message
+function process_message($message) {
+    $target = $message['target'];
+    if ($target == 'wordpress') {
+        // Log
+        error_log('Processing message for wordpress');
+    }
+}
+
+// Create public instance of the plugin
+$customer_sync_plugin = new CustomerSyncPlugin();
