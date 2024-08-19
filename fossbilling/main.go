@@ -30,8 +30,8 @@ func main() {
     defer ch.Close()
 
     q, err := ch.QueueDeclare(
-        "hello", // name
-        false,   // durable
+        "customer_sync", // name
+        true,   // durable
         false,   // delete when unused
         false,   // exclusive
         false,   // no-wait
