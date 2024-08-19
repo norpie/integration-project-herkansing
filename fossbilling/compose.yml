@@ -1,4 +1,16 @@
 services:
+  fossbilling-micro:
+    container_name: fossbilling-micro
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8001:8001
+    networks:
+      - default-network
+    depends_on:
+      - rabbitmq
   fossbilling:
     container_name: fossbilling
     image: fossbilling/fossbilling
