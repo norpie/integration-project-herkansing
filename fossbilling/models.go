@@ -1,17 +1,23 @@
 package main
 
+type Message struct {
+	Target string	   `json:"target"`
+	Action string	   `json:"action"`
+	Client interface{} `json:"client"`
+}
+
 type FossbillingClient struct {
-    ID        int    `xml:"id"`
-    FirstName string `xml:"first_name"`
-    LastName  string `xml:"last_name"`
-    Email     string `xml:"email"`
-    Phone     string `xml:"phone"`
-    Street    string `xml:"street"`
-    City      string `xml:"city"`
-    State     string `xml:"state"`
-    Zip       string `xml:"zip"`
-    Country   string `xml:"country"`
-    Company   string `xml:"company"`
-    Currency  string `xml:"currency"`
-    Password  string `xml:"password"`
+	ID		  int	 `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email	  string `json:"email"`
+	Phone	  string `json:"phone"`
+	Street	  string `json:"street"`
+	City	  string `json:"city"`
+	State	  string `json:"state"`
+	Zip		  string `json:"zip"`
+	Country   string `json:"country"`
+	Company   string `json:"company"`
+	Currency  string `json:"currency"`
+	Password  string `json:"password"`
 }
