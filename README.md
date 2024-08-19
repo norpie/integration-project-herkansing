@@ -21,4 +21,4 @@
 
 ## Sources
 
-- Initial Wordpress rabbitmq plugin: (Claude.AI)[https://claude.ai]
+- Initial Wordpress rabbitmq plugin: [Claude.AI](https://claude.ai)
