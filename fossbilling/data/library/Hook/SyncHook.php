@@ -31,14 +31,14 @@ class SyncHook
 
     public function onBeforeAdminCreateClient($di, $data)
     {
-        $json = json_encode($data['params']);
-        error_log("onBeforeAdminCreateClient: " . $json);
+        error_log('onBeforeAdminCreateClient: ' . json_encode($data));
+        $this->send_message('wordpress', 'create', $data['params']);
     }
 
     public function onBeforeAdminClientUpdate($di, $data)
     {
-        $json = json_encode($data['params']);
-        error_log("onBeforeAdminClientUpdate: " . $json);
+        error_log('onBeforeAdminClientUpdate: ' . json_encode($data));
+        $this->send_message('wordpress', 'update', $data['params']);
     }
 
     public function onBeforeAdminClientDelete($di, $data)
