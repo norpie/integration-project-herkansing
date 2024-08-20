@@ -51,3 +51,4 @@ fossbilling/data/library/Box/TwigLoader.php
 fossbilling/data/library/Box/UrlHelper.php
 fossbilling/data/library/Box/Url.php
 fossbilling/data/.htaccess
+fossbilling/data/library/Hook/vendor

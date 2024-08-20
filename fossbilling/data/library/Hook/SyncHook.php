@@ -1,21 +1,64 @@
 <?php
 namespace Hook;
 
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
+
+require_once __DIR__ . '/vendor/autoload.php';
+
 class SyncHook
 {
-    public static function onBeforeAdminCreateClient($data)
+
+    private $connection;
+    private $channel;
+
+    public function __construct()
     {
-        error_log("onBeforeAdminCreateClient: " . print_r($data['params'], true));
+        try {
+            $this->connection = new AMQPStreamConnection('rabbitmq', 5672, 'user', 'password', '/');
+            $this->channel = $this->connection->channel();
+            $this->channel->queue_declare('fossbilling_updates', false, true, false, false);
+        } catch (\Exception $e) {
+            error_log('Failed to connect to RabbitMQ: ' . $e->getMessage());
+        }
     }
 
-    public static function onBeforeAdminClientUpdate($data)
+    public function __destruct()
     {
-        error_log("onBeforeAdminClientUpdate: " . print_r($data['params'], true));
+        $this->channel->close();
+        $this->connection->close();
     }
 
-    public static function onBeforeAdminClientDelete($data)
+    public function onBeforeAdminCreateClient($di, $data)
     {
-        error_log("onBeforeAdminClientDelete: " . print_r($data['params'], true));
+        $json = json_encode($data['params']);
+        error_log("onBeforeAdminCreateClient: " . $json);
+    }
+
+    public function onBeforeAdminClientUpdate($di, $data)
+    {
+        $json = json_encode($data['params']);
+        error_log("onBeforeAdminClientUpdate: " . $json);
+    }
+
+    public function onBeforeAdminClientDelete($di, $data)
+    {
+        $id = $data['params']['id'];
+        $model = $di['db']->findOne('client', 'id = ?', [$id]);
+        $email = $model['email'];
+        error_log("onBeforeAdminClientDelete, email: " . $email);
+        $this->send_message('wordpress', 'delete', $email);
+    }
+
+    public function send_message($target, $action, $client) {
+        $json = json_encode([
+            'target' => $target,
+            'action' => $action,
+            'client' => $client
+        ]);
+        error_log('Sending message to RabbitMQ: ' . $json);
+        $message = new AMQPMessage($json);
+        $this->channel->basic_publish($message, '', 'fossbilling_updates');
     }
 }
 ?>

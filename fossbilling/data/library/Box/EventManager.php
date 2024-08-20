@@ -33,13 +33,13 @@ class Box_EventManager implements FOSSBilling\InjectionAwareInterface
         $hook = new Hook\SyncHook();
         switch ($data['event']) {
             case 'onBeforeAdminCreateClient':
-                $hook->onBeforeAdminCreateClient($data);
+                $hook->onBeforeAdminCreateClient($this->di, $data);
                 break;
             case 'onBeforeAdminClientUpdate':
-                $hook->onBeforeAdminClientUpdate($data);
+                $hook->onBeforeAdminClientUpdate($this->di, $data);
                 break;
             case 'onBeforeAdminClientDelete':
-                $hook->onBeforeAdminClientDelete($data);
+                $hook->onBeforeAdminClientDelete($this->di, $data);
                 break;
             default:
                 error_log('Irrelevant event call: ' . $data['event']);
