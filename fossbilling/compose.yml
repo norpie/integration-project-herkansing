@@ -18,7 +18,7 @@ services:
     ports:
       - 8000:80
     volumes:
-      - fossbilling-data:/var/www/html
+      - ./data:/var/www/html
     networks:
       - default-network
   fossbilling-db:
