@@ -135,6 +135,20 @@ function handle_form_submit_new_client() {
 
 add_action('wp', 'handle_form_submit_new_client');
 
+function handle_form_submit_delete_client() {
+    if (!isset($_POST['client_id'])) {
+        return;
+    }
+    $client_id = sanitize_text_field($_POST['client_id']);
+    $client_email = get_post_meta($client_id, 'client_email', true);
+    remove_client($client_email);
+    global $customer_sync_plugin;
+    $customer_sync_plugin->send_message('fossbilling', 'delete', ['email' => $client_email]);
+    echo '<p>Client deleted successfully!</p>';
+}
+
+add_action('wp', 'handle_form_submit_delete_client');
+
 function new_client($client) {
     $client_first_name = $client['first_name'];
     $client_last_name = $client['last_name'];

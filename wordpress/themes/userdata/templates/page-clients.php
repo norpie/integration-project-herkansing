@@ -55,6 +55,7 @@ get_header();
             $client_password = get_post_meta($client_id, 'client_password', true);
 
             echo "<tr>";
+            echo "<td><form action='' method='post'><input type='hidden' name='client_id' value='$client_id'><input type='submit' value='X'></form></td>";
             echo "<td>$client_id</td>";
             echo "<td>$client_first_name</td>";
             echo "<td>$client_last_name</td>";
