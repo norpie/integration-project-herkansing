@@ -136,8 +136,17 @@ func deleteClient(email string) error {
     if err != nil {
         return err
     }
-    client := reply.Result.(FossbillingClient)
-    _, err = fossbilling.Call("admin", "client/delete", client.ID)
+    if reply.Result == nil {
+        fmt.Println("Client not found")
+        return nil
+    }
+    client := reply.Result.(map[string]interface{})
+    if client["id"] == 0 {
+        fmt.Println("Client not found")
+        return nil
+    }
+    idMap := map[string]int{"id": int(client["id"].(float64))}
+    _, err = fossbilling.Call("admin", "client/delete", idMap)
     if err != nil {
         return err
     }
