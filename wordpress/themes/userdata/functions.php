@@ -62,10 +62,10 @@ function process_message($message) {
     error_log('Processing message for wordpress: ' . $action);
     switch ($action) {
         case 'create':
-            create_client($client);
+            new_client($client);
             break;
         case 'update':
-            update_client($client);
+            edit_client($client);
             break;
         case 'delete':
             delete_client($client);
@@ -122,6 +122,25 @@ function add_client_post_type() {
 
 add_action( 'init', 'add_client_post_type' );
 
+function handle_reset_form() {
+    if (!isset($_POST['reset_form'])) {
+        return;
+    }
+    $args = array(
+        'post_type' => 'client',
+        'post_status' => 'publish',
+        'posts_per_page' => -1
+    );
+
+    $clients = get_posts($args);
+    foreach ($clients as $client) {
+        wp_delete_post($client->ID, true);
+    }
+    echo '<p>All clients deleted successfully!</p>';
+}
+
+add_action('wp', 'handle_reset_form');
+
 function handle_form_submit_new_client() {
     if (!isset($_POST['submit_client_form'])) {
         return;
@@ -153,10 +172,18 @@ function handle_form_submit_new_client() {
     $customer_sync_plugin->send_message('fossbilling', 'create', $client);
 }
 
+add_action('wp', 'handle_form_submit_new_client');
+
 function handle_form_submit_update_client() {
-    if (!isset($_POST['client_id'])) {
+    if (!isset($_POST['edit_client_form'])) {
+        error_log('Edit client form not set');
         return;
     }
+    if (!isset($_POST['client_id'])) {
+        error_log('Client ID not set');
+        return;
+    }
+    error_log('Updating client');
     $client = [
         'first_name' => sanitize_text_field($_POST['client_first_name']),
         'last_name' => sanitize_text_field($_POST['client_last_name']),
@@ -173,14 +200,16 @@ function handle_form_submit_update_client() {
     ];
 
     edit_client($client);
-    echo '<p>Client updated successfully!</p>';
     global $customer_sync_plugin;
     $customer_sync_plugin->send_message('fossbilling', 'update', $client);
 }
 
-add_action('wp', 'handle_form_submit_new_client');
+add_action('wp', 'handle_form_submit_update_client');
 
 function handle_form_submit_delete_client() {
+    if (!isset($_POST['delete_client_form'])) {
+        return;
+    }
     if (!isset($_POST['client_id'])) {
         return;
     }
@@ -287,6 +316,7 @@ function edit_client($client) {
 
     $clients = get_posts($args);
     if (count($clients) == 0) {
+        echo '<p>Client does not exist.</p>';
         return;
     }
 

@@ -114,6 +114,11 @@ get_header();
     </style>
 </head>
 <body>
+    <h1>Reset</h1>
+    <form action="" method="post">
+        <input type="hidden" name="reset_form" value="true">
+        <input type="submit" name="reset" value="Reset">
+    </form>
     <h1>Clients</h1>
     <table>
         <tr>
@@ -157,7 +162,7 @@ get_header();
             $client_password = get_post_meta($client_id, 'client_password', true);
 
             echo "<tr>";
-            echo "<td><form action='' method='post'><input type='hidden' name='client_id' value='$client_id'><input type='submit' value='X'></form></td>";
+            echo "<td><form action='' method='post'><input type='hidden' name='client_id' value='$client_id'><input type='submit' name='delete_client_form' value='X'></form></td>";
             echo "<form action='' method='post'>";
             echo "<input type='hidden' name='client_id' value='$client_id'>";
             echo "<td>$client_id</td>";
@@ -172,8 +177,9 @@ get_header();
             echo "<td><input type='text' name='client_phone' value='$client_phone'></td>";
             echo "<td><input type='text' name='client_currency' value='$client_currency'></td>";
             echo "<td>$client_email</td>";
+            echo "<input type='hidden' name='client_email' value='$client_email'>";
             echo "<td><input type='password' name='client_password' value='$client_password'></td>";
-            echo "<td><input type='submit' name='submit_client_form' value='Save'></td>";
+            echo "<td><input type='submit' name='edit_client_form' value='Save'></td>";
             echo "</form>";
             echo "</tr>";
         }
@@ -200,7 +206,7 @@ get_header();
             <label for="client_postcode">Client Postal Code:</label><br>
             <input value="1000" type="text" name="client_postcode" id="client_postcode"><br>
             <label for="client_phone">Client Phone:</label><br>
-            <input value="0499999999" type="text" name="client_phone" id="client_phone"><br>
+            <input value="+32499999999" type="text" name="client_phone" id="client_phone"><br>
             <label for="client_currency">Client Currency:</label><br>
             <input value="EUR" type="text" name="client_currency" id="client_currency"><br>
             <label for="client_email">Client Email:</label><br>
