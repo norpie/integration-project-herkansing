@@ -52,3 +52,4 @@ fossbilling/data/library/Box/UrlHelper.php
 fossbilling/data/library/Box/Url.php
 fossbilling/data/.htaccess
 fossbilling/data/library/Hook/vendor
+fossbilling/micro/.env
