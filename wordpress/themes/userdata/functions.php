@@ -17,10 +17,19 @@ class CustomerSyncPlugin {
             $this->connection = new AMQPStreamConnection('rabbitmq', 5672, 'user', 'password', '/');
             $this->channel = $this->connection->channel();
             $this->channel->queue_declare('customer_sync', false, true, false, false);
+            $this->channel->queue_declare('fossbilling_updates', false, true, false, false);
+            error_log('Connected to RabbitMQ');
             // Consume all messages from the queue, and continue
-            $this->channel->basic_consume('customer_sync', '', false, false, false, false, function($message) {
-                process_message($message);
-            });
+            while (true) {
+                $messageCount = $this->channel->queue_declare('fossbilling_updates', true)[1];
+                if ($messageCount == 0) {
+                    echo "No more messages. Stopping consumer.\n";
+                    break;
+                }
+                $msg = $this->channel->basic_get('fossbilling_updates');
+                process_message($msg);
+            }
+            $this->rabbitmq_available = true;
         } catch (\Exception $e) {
             // Log the error
             error_log('Failed to connect to RabbitMQ: ' . $e->getMessage());
@@ -48,14 +57,26 @@ class CustomerSyncPlugin {
 
 // Handle rabbitmq consumed message, check if `target` is wordpress and process the message
 function process_message($message) {
-    $target = $message['target'];
-        error_log('Processing message for wordpress');
-    if ($target != 'wordpress') {
-        error_log('Message target is not wordpress');
-        $message->nack();
-        return;
+    $obj = json_decode($message->body, true);
+    $action = $obj['action'];
+    $client = $obj['client'];
+    error_log('Processing message for wordpress: ' . $action);
+    switch ($action) {
+        case 'create':
+            create_client($client);
+            break;
+        case 'update':
+            update_client($client);
+            break;
+        case 'delete':
+            delete_client($client);
+            break;
+        default:
+            error_log('Unknown action: ' . $action);
+            break;
     }
-    error_log('Processing message for wordpress');
+    error_log('Acknowledging message');
+    $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
 }
 
 function initiate_rabbitmq_connection() {
@@ -141,9 +162,9 @@ function handle_form_submit_delete_client() {
     }
     $client_id = sanitize_text_field($_POST['client_id']);
     $client_email = get_post_meta($client_id, 'client_email', true);
-    remove_client($client_email);
+    delete_client($client_email);
     global $customer_sync_plugin;
-    $customer_sync_plugin->send_message('fossbilling', 'delete', ['email' => $client_email]);
+    $customer_sync_plugin->send_message('fossbilling', 'delete', $client_email);
     echo '<p>Client deleted successfully!</p>';
 }
 
@@ -186,7 +207,7 @@ function new_client($client) {
     return $client_id;
 }
 
-function remove_client($email) {
+function delete_client($email) {
     $args = array(
         'post_type' => 'client',
         'post_status' => 'publish',
