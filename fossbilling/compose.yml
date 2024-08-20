@@ -2,7 +2,7 @@ services:
   fossbilling-micro:
     container_name: fossbilling-micro
     build:
-      context: .
+      context: ./micro
       dockerfile: Dockerfile
     restart: always
     ports:
