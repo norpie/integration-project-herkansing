@@ -6,25 +6,6 @@
 .
 ├── compose.yml
 ├── fossbilling
-│   └── compose.yml
-├── rabbitmq
-│   └── compose.yml
-└── wordpress
-    └── compose.yml
-```
-
-### Fossbilling
-
-### RabbitMQ
-
-### Wordpress
-
-## Sources
-
-- Initial Wordpress rabbitmq plugin: [Claude.AI](https://claude.ai)
-.
-├── compose.yml
-├── fossbilling
 │   ├── compose.yml
 │   ├── data
 │   │   └── library
@@ -53,5 +34,43 @@
             ├── functions.php
             ├── index.php
             └── style.css
+```
 
-11 directories, 20 files
+### Fossbilling
+
+#### Web
+
+* username: `user`
+* password: `password`
+* api: `PWVhmHzfAwk4y6yDJS6QCJ2kRwZFL4fJ`
+
+#### Microservice
+
+Is responsible for listening to RabbitMQ events and sending them to the Fossbilling API
+
+#### Hook
+
+Is responsible for listening to Fossbilling events and sending them to RabbitMQ
+
+### RabbitMQ
+
+* username: `user`
+* password: `password`
+
+Is responsible for handling the queue of events
+
+### Wordpress
+
+* username: `admin`
+* password: `hW5@WWK)EOvP2WNHNI`
+
+#### Theme - Userdata
+
+- `functions.php` is responsible for all the "backend" logic of the theme.
+- `style.css` is responsible for the theme's style.
+- `index.php` is responsible for the theme's main page. It is a simple page that displays the users' data, and allows updating/deleting them.
+
+## Sources
+
+- Initial Wordpress rabbitmq plugin: [Claude.AI](https://claude.ai)
+- General help with [Github Copilot](https://copilot.github.com)
