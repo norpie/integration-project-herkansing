@@ -36,11 +36,36 @@
             └── style.css
 ```
 
+## Progress
+
+- Client
+    - Create
+        - [x] Wordpress
+        - [x] Fossbilling
+    - Update
+        - [x] Wordpress
+        - [x] Fossbilling
+    - Delete
+        - [x] Wordpress
+        - [x] Fossbilling
+
+- Bugs
+    - Creating an account in wordpress does not give Fossbilling an address
+    - Updating an account in Fossbilling removes the address from Wordpress
+    - Cannot change email, since it is the primary key in Fossbilling
+
+## Services
+
+### Linux
+
+* username: `vboxuser`
+* password: `changeme`
+
 ### Fossbilling
 
 #### Web
 
-* username: `user`
+* username: `admin@userdata.local`
 * password: `password`
 * api: `PWVhmHzfAwk4y6yDJS6QCJ2kRwZFL4fJ`
 
