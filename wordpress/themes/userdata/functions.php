@@ -23,7 +23,6 @@ class CustomerSyncPlugin {
             while (true) {
                 $messageCount = $this->channel->queue_declare('fossbilling_updates', true)[1];
                 if ($messageCount == 0) {
-                    echo "No more messages. Stopping consumer.\n";
                     break;
                 }
                 $msg = $this->channel->basic_get('fossbilling_updates');
@@ -144,14 +143,14 @@ function handle_form_submit_new_client() {
 
     // Insert a new post of type 'fossbilling_client'
     $client_id = new_client($client);
-    global $customer_sync_plugin;
-    $customer_sync_plugin->send_message('fossbilling', 'create', $client);
-
     if ($client_id) {
         echo '<p>Client added successfully!</p>';
     } else {
-        echo '<p>Failed to add client.</p>';
+        echo '<p>Client alreay exists.</p>';
+        return;
     }
+    global $customer_sync_plugin;
+    $customer_sync_plugin->send_message('fossbilling', 'create', $client);
 }
 
 add_action('wp', 'handle_form_submit_new_client');
@@ -183,6 +182,25 @@ function new_client($client) {
     $client_currency = $client['currency'];
     $client_email = $client['email'];
     $client_password = $client['password'];
+
+    // Check if email already exists
+    $args = array(
+        'post_type' => 'client',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'client_email',
+                'value' => $client_email,
+                'compare' => '='
+            )
+        )
+    );
+
+    $clients = get_posts($args);
+    if (count($clients) > 0) {
+        return null;
+    }
 
     // Insert a new post of type 'fossbilling_client'
     $client_id = wp_insert_post(array(
