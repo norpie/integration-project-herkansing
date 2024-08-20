@@ -15,7 +15,7 @@ type FossbillingClient struct {
 	Street	  string `json:"street"`
 	City	  string `json:"city"`
 	State	  string `json:"state"`
-	Zip		  string `json:"zip"`
+	PostCode  string `json:"postcode"`
 	Country   string `json:"country"`
 	Company   string `json:"company"`
 	Currency  string `json:"currency"`

@@ -134,7 +134,7 @@ function handle_form_submit_new_client() {
         'city' => sanitize_text_field($_POST['client_city']),
         'state' => sanitize_text_field($_POST['client_state']),
         'country' => sanitize_text_field($_POST['client_country']),
-        'postal_code' => sanitize_text_field($_POST['client_postal_code']),
+        'postcode' => sanitize_text_field($_POST['client_postcode']),
         'phone' => sanitize_text_field($_POST['client_phone']),
         'currency' => sanitize_text_field($_POST['client_currency']),
         'email' => sanitize_text_field($_POST['client_email']),
@@ -151,6 +151,31 @@ function handle_form_submit_new_client() {
     }
     global $customer_sync_plugin;
     $customer_sync_plugin->send_message('fossbilling', 'create', $client);
+}
+
+function handle_form_submit_update_client() {
+    if (!isset($_POST['client_id'])) {
+        return;
+    }
+    $client = [
+        'first_name' => sanitize_text_field($_POST['client_first_name']),
+        'last_name' => sanitize_text_field($_POST['client_last_name']),
+        'company' => sanitize_text_field($_POST['client_company']),
+        'address' => sanitize_text_field($_POST['client_address']),
+        'city' => sanitize_text_field($_POST['client_city']),
+        'state' => sanitize_text_field($_POST['client_state']),
+        'country' => sanitize_text_field($_POST['client_country']),
+        'postcode' => sanitize_text_field($_POST['client_postcode']),
+        'phone' => sanitize_text_field($_POST['client_phone']),
+        'currency' => sanitize_text_field($_POST['client_currency']),
+        'email' => sanitize_text_field($_POST['client_email']),
+        'password' => sanitize_text_field($_POST['client_password'])
+    ];
+
+    edit_client($client);
+    echo '<p>Client updated successfully!</p>';
+    global $customer_sync_plugin;
+    $customer_sync_plugin->send_message('fossbilling', 'update', $client);
 }
 
 add_action('wp', 'handle_form_submit_new_client');
@@ -177,7 +202,7 @@ function new_client($client) {
     $client_city = $client['city'];
     $client_state = $client['state'];
     $client_country = $client['country'];
-    $client_postal_code = $client['postal_code'];
+    $client_postcode = $client['postcode'];
     $client_phone = $client['phone'];
     $client_currency = $client['currency'];
     $client_email = $client['email'];
@@ -215,7 +240,7 @@ function new_client($client) {
             'client_city' => $client_city,
             'client_state' => $client_state,
             'client_country' => $client_country,
-            'client_postal_code' => $client_postal_code,
+            'client_postcode' => $client_postcode,
             'client_phone' => $client_phone,
             'client_currency' => $client_currency,
             'client_email' => $client_email,
@@ -262,8 +287,9 @@ function edit_client($client) {
 
     $clients = get_posts($args);
     if (count($clients) == 0) {
-        return null;
+        return;
     }
+
     $old_client = $clients[0];
 
     $client_first_name = $client['first_name'];
@@ -273,7 +299,7 @@ function edit_client($client) {
     $client_city = $client['city'];
     $client_state = $client['state'];
     $client_country = $client['country'];
-    $client_postal_code = $client['postal_code'];
+    $client_postcode = $client['postcode'];
     $client_phone = $client['phone'];
     $client_currency = $client['currency'];
     $client_password = $client['password'];
@@ -292,7 +318,7 @@ function edit_client($client) {
             'client_city' => $client_city,
             'client_state' => $client_state,
             'client_country' => $client_country,
-            'client_postal_code' => $client_postal_code,
+            'client_postcode' => $client_postcode,
             'client_phone' => $client_phone,
             'client_currency' => $client_currency,
             'client_email' => $client_email,

@@ -150,7 +150,7 @@ get_header();
             $client_city = get_post_meta($client_id, 'client_city', true);
             $client_state = get_post_meta($client_id, 'client_state', true);
             $client_country = get_post_meta($client_id, 'client_country', true);
-            $client_postal_code = get_post_meta($client_id, 'client_postal_code', true);
+            $client_postcode = get_post_meta($client_id, 'client_postcode', true);
             $client_phone = get_post_meta($client_id, 'client_phone', true);
             $client_currency = get_post_meta($client_id, 'client_currency', true);
             $client_email = get_post_meta($client_id, 'client_email', true);
@@ -168,7 +168,7 @@ get_header();
             echo "<td><input type='text' name='client_city' value='$client_city'></td>";
             echo "<td><input type='text' name='client_state' value='$client_state'></td>";
             echo "<td><input type='text' name='client_country' value='$client_country'></td>";
-            echo "<td><input type='text' name='client_postal_code' value='$client_postal_code'></td>";
+            echo "<td><input type='text' name='client_postcode' value='$client_postcode'></td>";
             echo "<td><input type='text' name='client_phone' value='$client_phone'></td>";
             echo "<td><input type='text' name='client_currency' value='$client_currency'></td>";
             echo "<td>$client_email</td>";
@@ -197,8 +197,8 @@ get_header();
             <input value="Bruxelles" type="text" name="client_state" id="client_state"><br>
             <label for="client_country">Client Country:</label><br>
             <input value="BE" type="text" name="client_country" id="client_country"><br>
-            <label for="client_postal_code">Client Postal Code:</label><br>
-            <input value="1000" type="text" name="client_postal_code" id="client_postal_code"><br>
+            <label for="client_postcode">Client Postal Code:</label><br>
+            <input value="1000" type="text" name="client_postcode" id="client_postcode"><br>
             <label for="client_phone">Client Phone:</label><br>
             <input value="0499999999" type="text" name="client_phone" id="client_phone"><br>
             <label for="client_currency">Client Currency:</label><br>
