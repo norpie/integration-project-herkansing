@@ -68,6 +68,7 @@
 * username: `admin@userdata.local`
 * password: `password`
 * api: `PWVhmHzfAwk4y6yDJS6QCJ2kRwZFL4fJ`
+* port: `8080`
 
 #### Microservice
 
@@ -81,6 +82,7 @@ Is responsible for listening to Fossbilling events and sending them to RabbitMQ
 
 * username: `user`
 * password: `password`
+* port `15672`
 
 Is responsible for handling the queue of events
 
@@ -88,6 +90,7 @@ Is responsible for handling the queue of events
 
 * username: `admin`
 * password: `hW5@WWK)EOvP2WNHNI`
+* port: `8000`
 
 #### Theme - Userdata
 
