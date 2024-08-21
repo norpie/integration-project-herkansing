@@ -66,7 +66,7 @@
 #### Web
 
 * username: `admin@userdata.local`
-* password: `password`
+* password: `P4ssw0rd`
 * api: `PWVhmHzfAwk4y6yDJS6QCJ2kRwZFL4fJ`
 * port: `8080`
 
